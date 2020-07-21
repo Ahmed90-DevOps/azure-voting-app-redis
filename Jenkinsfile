@@ -14,7 +14,7 @@ pipeline {
       }
       stage('Start test app') {
          steps {
-            sh label: '', script: 'ssh -tt -i /var/jenkins_home/.ssh/id_rsa root@172.17.0.1 && docker-compose up -d && ./scripts/test_container.ps1'
+            sh label: '', script: 'ssh -tt -i /var/jenkins_home/.ssh/id_rsa root@172.17.0.1 "cd /home/ec2-user/github_repos/azure-voting-app-redis && docker-compose up -d && ./scripts/test_container.ps1"'
          }
          post {
             success {
@@ -27,12 +27,12 @@ pipeline {
       }
       stage('Run Tests') {
          steps {
-            sh label: '', script: 'pytest ./tests/test_sample.py'
+            sh label: '', script: 'ssh -tt -i /var/jenkins_home/.ssh/id_rsa root@172.17.0.1 "pytest /home/ec2-user/github_repos/azure-voting-app-redis/tests/test_sample.py"'
          }
       }
       stage('Stop test app') {
          steps {
-            sh label: '', script: 'docker-compose down'
+            sh label: '', script: 'ssh -tt -i /var/jenkins_home/.ssh/id_rsa root@172.17.0.1 "cd /home/ec2-user/github_repos/azure-voting-app-redis && docker-compose down"'
             }
       }
    }
