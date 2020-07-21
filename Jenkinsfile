@@ -9,22 +9,12 @@ pipeline {
       }
       stage('Docker Build') {
          steps {
-            pwsh(script: 'docker images -a')
-            pwsh(script: """
-               cd azure-vote/
-               docker images -a
-               docker build -t jenkins-pipeline .
-               docker images -a
-               cd ..
-            """)
-         }
+               sh label: '', script: 'ssh -tt -i /var/jenkins_home/.ssh/id_rsa root@172.17.0.1 "cd /home/ec2-user/github_repos/azure-voting-app-redis/azure-vote/ && docker images -a && docker build -t jenkins-pipeline . && docker images -a && cd .."'
+            }
       }
       stage('Start test app') {
          steps {
-            pwsh(script: """
-               docker-compose up -d
-               ./scripts/test_container.ps1
-            """)
+            sh label: '', script: 'ssh -tt -i /var/jenkins_home/.ssh/id_rsa root@172.17.0.1 && docker-compose up -d && ./scripts/test_container.ps1'
          }
          post {
             success {
@@ -37,17 +27,13 @@ pipeline {
       }
       stage('Run Tests') {
          steps {
-            pwsh(script: """
-               pytest ./tests/test_sample.py
-            """)
+            sh label: '', script: 'pytest ./tests/test_sample.py'
          }
       }
       stage('Stop test app') {
          steps {
-            pwsh(script: """
-               docker-compose down
-            """)
-         }
+            sh label: '', script: 'docker-compose down'
+            }
       }
    }
 }
