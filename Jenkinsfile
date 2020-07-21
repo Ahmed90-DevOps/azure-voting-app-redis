@@ -27,7 +27,7 @@ pipeline {
       }
       stage('Run Tests') {
          steps {
-            sh label: '', script: 'ssh -tt -i /var/jenkins_home/.ssh/id_rsa root@172.17.0.1 "pytest /home/ec2-user/github_repos/azure-voting-app-redis/tests/test_sample.py"'
+            sh label: '', script: 'ssh -tt -i /var/jenkins_home/.ssh/id_rsa root@172.17.0.1 "python /home/ec2-user/github_repos/azure-voting-app-redis/tests/test_sample.py"'
          }
       }
       stage('Stop test app') {
